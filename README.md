@@ -1,4 +1,4 @@
-# flask-sse-thread-demo
+# flask-sockets-demo
 
 * A real-time multi-threaded data transfer demo based on Flask and WebSocket and check [SSE](https://github.com/cognitiveRobot/flask-sse-thread-demo) for the server sent event based demo.
 Read [this](https://www.smashingmagazine.com/2018/02/sse-websockets-data-flow-http2/) to learn more about SSE and Websockets.  
