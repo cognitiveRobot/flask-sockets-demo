@@ -5,6 +5,45 @@
     <title>ThinkAgain for real-time</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <style>
+    .wrapper {
+      position: relative;
+      width: 640px;
+      height: 480px;
+      margin: 50px auto 0 auto;
+      padding-bottom: 30px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      clear: both;
+    }
+    .box {
+      float: left;
+      width: 50%;
+      height: 50%;
+      box-sizing: border-box;
+    }
+    /* .container {
+      width: 450px;
+      margin: 0 auto;
+      text-align: center;
+    } */
+    .gauge {
+      width: 320px;
+      height: 240px;
+    }
+    button {
+      margin: 30px 5px 0 2px;
+      padding: 16px 40px;
+      border-radius: 5px;
+      font-size: 18px;
+      border: none;
+      background: #34aadc;
+      color: white;
+      cursor: pointer;
+    }
+    </style>
+
   </head>
   <body>
 
@@ -60,15 +99,57 @@
             </div>
           </div>
         </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-content">
+              <a class="card-title" href="">Current Humidity</a>
+              <p>Location </p>
+              <hr>
+              <div id="g1" class="gauge"></div>
+            </div>
+          </div>
+
+        </div>
+
+
     </div>
   </div>
+
 
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Compiled and minified JavaScript - Need for sse and materialize-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+
+    <script src="static/raphael-2.1.4.min.js"></script>
+    <script src="static/justgage.js"></script>
+
     <script type="text/javascript">
+      var g1;
+      document.addEventListener("DOMContentLoaded", function(event) {
+        // console.log("just to be updated")
+          g1 = new JustGage({
+          id: 'g1',
+          value: 0,
+          min: 0,
+          max: 100,
+          symbol: '%',
+          pointer: true,
+          gaugeWidthScale: 0.6,
+          customSectors: [{
+            color: '#ff0000',
+            lo: 50,
+            hi: 100
+          }, {
+            color: '#00ff00',
+            lo: 0,
+            hi: 50
+          }],
+          counter: true
+        });
+      });
       // for WebSocket trigger and echo
       var ws = new WebSocket("ws://localhost:5000/time");
       var target1 = document.getElementById("tempReading");
@@ -89,10 +170,13 @@
            target1.innerHTML = obj.temp +" @" + obj.time + '<br>';
            target2.innerHTML = obj.humidity +" @" + obj.time + '<br>';
            //document.body.insertBefore(el, document.body.childNodes[0]);
+           g1.refresh(obj.humidity % 100); //displaying fake data for now.
          };
 
         // side nav for mobile device - part of materialize framework.
         $('.sidenav').sidenav();
+
+
 
     </script>
   </body>
