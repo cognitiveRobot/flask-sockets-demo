@@ -5,7 +5,7 @@
     <title>ThinkAgain for real-time</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
     .wrapper {
       position: relative;
@@ -85,6 +85,7 @@
               <p>Location </p>
               <hr>
               <p id="tempReading"></p>
+              <div id="sine-graph" style="width: 400px; height: 400px;">
             </div>
           </div>
         </div>
@@ -128,6 +129,15 @@
 
     <script type="text/javascript">
       var g1;
+      var data;
+      var obj;
+      //var my_plot;
+      var my_plot = {
+           x: [0,0,0,0,0,0,0],
+           y: [0,0,0,0,0,0,0],
+           type: 'scatter',
+       };
+       Plotly.newPlot('sine-graph', [my_plot]);
       document.addEventListener("DOMContentLoaded", function(event) {
         // console.log("just to be updated")
           g1 = new JustGage({
@@ -150,6 +160,7 @@
           counter: true
         });
       });
+      console.log("Opening websocket")
       // for WebSocket trigger and echo
       var ws = new WebSocket("ws://localhost:5000/time");
       var target1 = document.getElementById("tempReading");
@@ -161,16 +172,22 @@
            alert("socket closed");
          };
          ws.onmessage = function(evt){
-           console.log(evt.data)
-           var obj = JSON.parse(evt.data);
-           console.log(obj.temp)
-           console.log(obj.humidity)
-          // var el = document.createElement("div");
-           //el.innerHTML = evt.data;
-           target1.innerHTML = obj.temp +" @" + obj.time + '<br>';
-           target2.innerHTML = obj.humidity +" @" + obj.time + '<br>';
-           //document.body.insertBefore(el, document.body.childNodes[0]);
-           g1.refresh(obj.humidity % 100); //displaying fake data for now.
+           // console.log(evt.data)
+          //  obj = JSON.parse(evt.data);
+          //  // console.log(obj.temp)
+          //  // console.log(obj.humidity)
+          // // var el = document.createElement("div");
+          //  //el.innerHTML = evt.data;
+          //  target1.innerHTML = obj.temp +" @" + obj.time + '<br>';
+          //  target2.innerHTML = obj.humidity +" @" + obj.time + '<br>';
+          //  //document.body.insertBefore(el, document.body.childNodes[0]);
+          //  g1.refresh(obj.humidity % 100); //displaying fake data for now.
+          //
+           data = JSON.parse(evt.data);
+           // Plotly.extendTraces('sine-graph', {y: [[data.x]]}, [0])
+           Plotly.restyle('sine-graph', 'x', [data.x]);
+           Plotly.restyle('sine-graph', 'y', [data.y]);
+           // console.log(data.y)
          };
 
         // side nav for mobile device - part of materialize framework.
